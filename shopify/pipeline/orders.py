@@ -79,6 +79,17 @@ pipeline = Pipeline(
                     ]
                     if refund.get("transactions")
                     else [],
+                    "refund_line_items": [
+                        {
+                            "id": refund_line_item.get("id"),
+                            "quantity": refund_line_item.get("quantity"),
+                            "subtotal": refund_line_item.get("subtotal"),
+                            "total_tax": refund_line_item.get("total_tax"),
+                        }
+                        for refund_line_item in refund["refund_line_items"]
+                    ]
+                    if refund.get("refund_line_items")
+                    else [],
                 }
                 for refund in row["refunds"]
             ]
@@ -171,6 +182,17 @@ pipeline = Pipeline(
                         {"name": "amount", "type": "NUMERIC"},
                         {"name": "created_at", "type": "TIMESTAMP"},
                         {"name": "processed_at", "type": "TIMESTAMP"},
+                    ],
+                },
+                {
+                    "name": "refund_line_items",
+                    "type": "RECORD",
+                    "mode": "REPEATED",
+                    "fields": [
+                        {"name": "id", "type": "NUMERIC"},
+                        {"name": "quantity", "type": "NUMERIC"},
+                        {"name": "subtotal", "type": "NUMERIC"},
+                        {"name": "total_tax", "type": "NUMERIC"},
                     ],
                 },
                 {"name": "last_name", "type": "STRING"},
